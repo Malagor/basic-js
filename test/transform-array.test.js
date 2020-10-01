@@ -93,8 +93,19 @@ describe('Transform array', () => {
             for(let i = 0; i < 50; i += 1) {
                 const { input, output } = createSample(i);
                 assert.deepStrictEqual(transform(input), output);
-            }   
+            }
         });
+
+        // it.optional('control sequences work properly', () => {
+        //     for(let i = 0; i < 50; i += 1) {
+        //         const { input, output } = createSample(i);
+        //         let output2 = transform(input);
+        //         let str = 'BEFORE: ' + input.join(', ') + 'AFTER:' + output.join(', ');
+        //         if (output2.length !== output.length) {
+        //             assert.deepStrictEqual('1', str);
+        //         }
+        //     }
+        // });
 
         it.optional('doesn\'t change initial array', () => {
             for(let i = 0; i < 50; i += 1) {
