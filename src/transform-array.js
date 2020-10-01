@@ -6,69 +6,34 @@ module.exports = function transform(arr) {
 
   let resultArr = [];
 
-  let isDelete = false;
-  let isDouble = false;
-  let isDiscardNext = false;
+  const arrLength = arr.length;
 
+  for (let i = 0; i < arrLength; i++) {
+    const element = arr[i];
 
+    if ( element === '--discard-next' ) {
+      i += 1;
 
-  for (let i = 0; i < arr.length; i++) {
-    // const element = arr[i];
-    // console.log('currElement = ',element);
+      if (arr[i+1] === '--double-prev' || arr[i+1] === '--discard-prev'){
+        i += 1;
+      }
+    } else if (element === '--double-next') {
 
-    switch (arr[i]) {
-      case '--discard-next':
-        isDelete = true;
-        isDiscardNext = true;
-        break;
+      if ((i + 1) < arrLength) {
+        resultArr.push(arr[i+1]);
+      }
+    } else if (element === '--double-prev'){
 
-      case '--discard-prev':
-        if (!resultArr[resultArr.length - 1] === undefined
-          || resultArr[resultArr.length - 1] === arr[i - 1]
-          || isNaN(resultArr[resultArr.length - 1]) === isNaN(arr[i-1])) {
-          resultArr.pop();
-        }
-        isDiscardNext = false;
-        break;
-
-      case '--double-next':
-        isDouble = true;
-        isDiscardNext = false;
-        break;
-
-      case '--double-prev':
-        if ( (resultArr[resultArr.length - 1] !== undefined)
-          && (resultArr[resultArr.length - 1] === arr[i-1])
-          && (isNaN(resultArr[resultArr.length - 1]) === isNaN(arr[i-1]))
-          && !isDiscardNext
-        ) {
-
-          // if (!isDiscardNext) {
-          resultArr.push(arr[i - 1]);
-          // }
-
-          // isDiscardNext = false; /* TODO: сюда не заходид что бы переключить этот флаг */
-        }
-        isDiscardNext = false;
-        break;
-
-      default:
-        if (isDelete) {
-          isDelete = false;
-          break;
-        }
-
-        if (isDouble) {
-          resultArr.push(arr[i]);
-          isDouble = false;
-        }
-
-        resultArr.push(arr[i]);
+      if (i-1 >= 0){
+        resultArr.push(arr[i-1]);
+      }
+    } else if (element === '--discard-prev') {
+      resultArr.pop();
+    } else {
+      resultArr.push(arr[i]);
     }
-    // console.log('Arr after turn: ', resultArr,'\n');
-  }
 
-  // console.log(resultArr);
+  }
 
   return resultArr;
 
