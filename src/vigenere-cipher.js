@@ -7,39 +7,40 @@ class VigenereCipheringMachine {
   encrypt(message, key) {
     if (!message || !key) throw new Error();
 
-    /*TODO: Похоже пробелы не участвуют в построении строки. Нужно сперва убрать пробелы*/
-
-    const localMessage = message.toUpperCase().split('');
-    console.log(localMessage);
+    const localMessage = message.toUpperCase();
     const messageLength = message.length;
-    console.log(messageLength);
-    const stringToMatch = ''.padEnd(messageLength, key).toUpperCase();
+    const stringToMatch = ''.padEnd(messageLength * 2, key).toUpperCase();
     const doubleAlphabet = this.alphabet + this.alphabet;
 
     let result = '';
+    let i = 0;
+    let j = 0;
 
-    for (let i = 0; i < messageLength; ++i) {
+    while (i < messageLength) {
       const messageChar = localMessage[i];
-      const secretChar = stringToMatch[i];
+      const secretChar = stringToMatch[j];
 
-      if (!/[A-Z]/.test(messageChar))
-      {
+      if (!/[A-Z]/.test(messageChar)) {
         result += messageChar;
+        i++;
       } else {
 
         const positionMessageChar = messageChar.charCodeAt(0) - 'A'.charCodeAt(0);
         const positionSecretChar = secretChar.charCodeAt(0) - 'A'.charCodeAt(0);
-        // console.log('positionSecretChar', positionSecretChar);
-        // console.log('positionMessageChar', positionMessageChar);
-
         const resultCharPosition = positionSecretChar + positionMessageChar;
-
         const resultChar = doubleAlphabet.charAt(resultCharPosition);
-        // console.log(resultChar);
 
         result += resultChar;
+
+        i++;
+        j++;
       }
-      console.log(result);
+    }
+
+    if (this.typeOfMachine) {
+      return result;
+    } else {
+      return result.split('').reverse().join('');
     }
   }
 
@@ -47,6 +48,41 @@ class VigenereCipheringMachine {
   decrypt(message, key) {
     if (!message || !key) throw new Error();
 
+    const localMessage = message.toUpperCase();
+    const messageLength = message.length;
+    const stringToMatch = ''.padEnd(messageLength * 2, key).toUpperCase();
+    const doubleAlphabet = this.alphabet + this.alphabet;
+
+    let result = '';
+    let i = 0;
+    let j = 0;
+
+    while (i < messageLength) {
+      const secretChar = stringToMatch[j];
+      const messageChar = localMessage[i];
+      const positionSecretChar = doubleAlphabet.indexOf(secretChar);
+
+      let positionMessageChar = 0;
+
+      if (!/[A-Z]/.test(messageChar)) {
+        result += messageChar;
+        i++;
+      } else {
+        positionMessageChar = doubleAlphabet.indexOf(messageChar, positionSecretChar);
+        const charResult = doubleAlphabet.charAt(positionMessageChar - positionSecretChar);
+
+        result += charResult;
+
+        i++;
+        j++;
+      }
+    }
+
+    if (this.typeOfMachine) {
+      return result;
+    } else {
+      return result.split('').reverse().join('');
+    }
   }
 }
 
