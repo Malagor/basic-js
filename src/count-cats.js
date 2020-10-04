@@ -3,17 +3,14 @@ const CustomError = require("../extensions/custom-error");
 module.exports = function countCats(matrix) {
   let catCaunter = 0;
 
-  for (let i = 0; i < matrix.length; i++) {
-    const element = matrix[i];
+  matrix.forEach(element => {
 
-    for (let j = 0; j < element.length; j++) {
+    const countCat = (acum, item) => item === '^^' ? ++acum : acum;
 
-      if (element[j] === '^^') {
-        catCaunter++;
-      }
-    }
+    catCaunter += element.reduce(countCat, 0);
 
-  }
+  });
+
   return catCaunter;
 };
 
