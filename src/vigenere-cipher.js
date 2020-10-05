@@ -4,8 +4,21 @@ class VigenereCipheringMachine {
     this.alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
   }
 
-  encrypt(message, key) {
+  returnResult(result) {
+    if (this.typeOfMachine) {
+      return result;
+    } else {
+      return result.split('').reverse().join('');
+    }
+  }
+
+  checkArguments (message, key) {
     if (!message || !key) throw new Error();
+    return true;
+  }
+
+  encrypt(message, key) {
+    this.checkArguments(message, key);
 
     const localMessage = message.toUpperCase();
     const messageLength = message.length;
@@ -37,16 +50,12 @@ class VigenereCipheringMachine {
       }
     }
 
-    if (this.typeOfMachine) {
-      return result;
-    } else {
-      return result.split('').reverse().join('');
-    }
+    return this.returnResult(result);
   }
 
 
   decrypt(message, key) {
-    if (!message || !key) throw new Error();
+    this.checkArguments(message, key);
 
     const localMessage = message.toUpperCase();
     const messageLength = message.length;
@@ -78,11 +87,7 @@ class VigenereCipheringMachine {
       }
     }
 
-    if (this.typeOfMachine) {
-      return result;
-    } else {
-      return result.split('').reverse().join('');
-    }
+    return this.returnResult(result);
   }
 }
 
